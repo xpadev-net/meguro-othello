@@ -1,6 +1,6 @@
-use std::{ops::Div, collections::btree_set::Union, };
 
-use zoon::{format, named_color::*, *, dominator::{animation::Percentage, window_size}, web_sys::HtmlScriptElement};
+
+use zoon::{format, named_color::*, *,  };
 
 // @TODO finish
 
@@ -9,23 +9,23 @@ type Y = u32;
 
 #[derive(Debug, Clone)]
 struct Field {
-    kind: FieldKind,
+    kind: State,
 }
 
 impl Field {
-    fn new_empty(mines: u16) -> Self {
+    fn new_empty(state:State) -> Self {
         Field {
-            kind: FieldKind::Empty { mines }
+            kind:state,
         }
     }
 }
 
-    
 
 #[derive(Debug, Clone, Copy)]
-enum FieldKind {
-    Mine,
-    Empty { mines: u16 },
+enum State {
+    Empty,
+    Black,
+    White,
 }
 
 
@@ -38,105 +38,87 @@ fn fields() -> &'static MutableVec<MutableVec<Field>> {
 fn hardcoded_fields() -> Vec<MutableVec<Field>> {
     vec![
         MutableVec::new_with_values(vec![
-            Field::new_empty(1),
-            Field::new_empty(1),
-            Field::new_empty(1),
-            Field::new_empty(1),
-            Field::new_empty(1),
-            Field::new_empty(1),
-            Field::new_empty(1),
-            Field::new_empty(1),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
+            Field::new_empty(State ::Black),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
+            Field::new_empty(State ::Empty),
         ]),
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
+            Field::new_empty(State ::White),
         ]),
     ]
 }
-
-// fn flagged_count() -> impl Signal<Item = usize> {
-//     fields()
-//         .signal_vec_cloned()
-//         .map_signal(|fields| {
-//             fields
-//                 .signal_vec_cloned()
-//                 .filter_signal_cloned(|field| {
-//                     field
-//                         .state
-//                         .signal_ref(|state| matches!(state, FieldState::Flagged))
-//                 })
-//                 .len()
-//         })
-//         .sum()
-// }
-
-
 
 
 
@@ -150,7 +132,6 @@ fn root() -> impl Element {
         .item(grid())
         .item(reset_button())
 }
-
 
 
 fn reset_button() -> impl Element {
@@ -208,11 +189,6 @@ fn field_button(x: X, y: Y, field: Field) -> impl Element {
         .label(
             El::new().s(Height::fill()).child(
                 Column::new()
-                    // .item(El::new().child(format!("[{x}, {y}]")))
-                    // .item(
-                    //     El::new()
-                    //         .child_signal(field.state.signal_ref(|state| format!("{state:#?}"))),
-                    // )
                     .item(stone(x, y, field))
                     
             ),
@@ -220,7 +196,6 @@ fn field_button(x: X, y: Y, field: Field) -> impl Element {
         // @TODO refactor together with event handler API redesign
         .update_raw_el(|raw_el| {
             raw_el
-                
                 .event_handler_with_options(
                     EventOptions::new().preventable(),
                     move |event: events::ContextMenu| {
@@ -236,9 +211,13 @@ fn stone(x: X, y: Y, field: Field) -> impl Element {
         .s(Align::center())
         .s(Width::exact(80))
         .s(Height::exact(80))
-        .s(Background::new().color(hsluv!(0, 0, 0)))
+        .s(Background::new().color(match field.kind {
+            State::Empty  => hsluv!(0, 0, 0, 0),
+            State::Black => hsluv!(0, 0, 0),
+            _ => hsluv!(0, 0, 100)
+        }))
         .s(RoundedCorners::all(100))
-
+        
 }
 
 
