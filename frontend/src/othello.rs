@@ -3,6 +3,7 @@ use serde_json;
 use zoon::console::log;
 use crate::othello::State::{Black, Empty, White};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Pos {
     x: i8,
     y: i8
@@ -63,22 +64,22 @@ impl Board {
     石を置けるか確認する
     */
     fn is_placeable(&self, current_pos: Pos) -> bool{
-        let current = self.get(*current_pos);
+        let current = self.get(current_pos);
         if current != Empty {
             return false;
         }
         for offset_x in -1..2 {
             for offset_y in -1..2{
                 let mut pos = current_pos.new_offset(offset_x,offset_y);
-                if (offset_x ==0&& offset_y ==0) || !is_in_board(*pos) {
+                if (offset_x ==0&& offset_y ==0) || !is_in_board(pos) {
                     continue;
                 }
-                let target = self.get(*pos);
+                let target = self.get(pos);
                 if target == Empty || (target == Black && self.is_black) || (target == White && !self.is_black) {
                     continue;
                 }
-                while is_in_board(*pos) {
-                    let target = self.get(*pos);
+                while is_in_board(pos) {
+                    let target = self.get(pos);
                     if target == Empty {
                         break;
                     }
@@ -97,31 +98,31 @@ impl Board {
     置いた際のひっくり返す処理もここ
     */
     fn _put(&mut self, current_pos: Pos){
-        let current = self.get(*current_pos);
+        let current = self.get(current_pos);
         if current != Empty {
             return;
         }
-        self.update(*current_pos);
+        self.update(current_pos);
         for offset_x in -1..2 {
             for offset_y in -1..2{
                 let mut pos = current_pos.new_offset(offset_x,offset_y);
-                if (offset_x ==0&& offset_y ==0) || !is_in_board(*pos) {
+                if (offset_x ==0&& offset_y ==0) || !is_in_board(pos) {
                     continue;
                 }
-                let target = self.get(*pos);
+                let target = self.get(pos);
                 if target == Empty || (target == Black && self.is_black) || (target == White && !self.is_black) {
                     continue;
                 }
-                while is_in_board(*pos) {
-                    let target = self.get(*pos);
+                while is_in_board(pos) {
+                    let target = self.get(pos);
                     if target == Empty {
                         break;
                     }
-                    log(&*format!("search,{}", *pos));
+                    log(&format!("search,{:?}", pos));
                     if (target == Black && self.is_black) || (target == White && !self.is_black) {
                         let mut _pos = pos.new_offset(offset_x,offset_y);
-                        while is_in_board(*_pos) {
-                            self.update(*_pos);
+                        while is_in_board(_pos) {
+                            self.update(_pos);
                             _pos.apply_offset(offset_x,offset_y);
                             if _pos.x == pos.x {
                                 break;
@@ -139,10 +140,10 @@ impl Board {
     石を置くメゾット
     */
     pub fn put(&mut self, pos: Pos) -> Result<i8,String> {
-        if !self.is_placeable(*pos) {
+        if !self.is_placeable(pos) {
             return Err("slot is not placeable".to_owned());
         }
-        self._put(*pos);
+        self._put(pos);
         Ok(0)
     }
 }
