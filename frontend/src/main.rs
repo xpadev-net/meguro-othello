@@ -1,3 +1,5 @@
+mod othello;
+
 use zoon::{named_color::*, *};
 
 #[static_ref]
