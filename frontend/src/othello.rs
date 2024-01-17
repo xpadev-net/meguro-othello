@@ -33,7 +33,8 @@ pub enum State {
 */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Board{
-    data: [[State;10];10]
+    data: [[State;10];10],
+    is_black: bool
 }
 
 impl Board {
@@ -47,8 +48,8 @@ impl Board {
     /**
     座標からマスの状態を更新する
     */
-    fn update(&mut self, pos: Pos,is_black: bool){
-        self.data[pos.y as usize][pos.x as usize] = if is_black { Black } else { White };
+    fn update(&mut self, pos: Pos){
+        self.data[pos.y as usize][pos.x as usize] = if self.is_black { Black } else { White };
     }
 
     /**
@@ -61,7 +62,7 @@ impl Board {
     /**
     石を置けるか確認する
     */
-    fn is_placeable(&self, current_pos: Pos, is_black: bool) -> bool{
+    fn is_placeable(&self, current_pos: Pos) -> bool{
         let current = self.get(*current_pos);
         if current != Empty {
             return false;
@@ -73,7 +74,7 @@ impl Board {
                     continue;
                 }
                 let target = self.get(*pos);
-                if target == Empty || (target == Black && is_black) || (target == White && !is_black) {
+                if target == Empty || (target == Black && self.is_black) || (target == White && !self.is_black) {
                     continue;
                 }
                 while is_in_board(*pos) {
@@ -81,7 +82,7 @@ impl Board {
                     if target == Empty {
                         break;
                     }
-                    if (target == Black && !is_black) || (target == White && is_black) {
+                    if (target == Black && !self.is_black) || (target == White && self.is_black) {
                         return true;
                     }
                     pos.apply_offset(offset_x,offset_y);
@@ -95,12 +96,12 @@ impl Board {
     石を置くメゾットの内部処理
     置いた際のひっくり返す処理もここ
     */
-    fn _put(&mut self, current_pos: Pos, is_black: bool){
+    fn _put(&mut self, current_pos: Pos){
         let current = self.get(*current_pos);
         if current != Empty {
             return;
         }
-        self.update(*current_pos,is_black);
+        self.update(*current_pos);
         for offset_x in -1..2 {
             for offset_y in -1..2{
                 let mut pos = current_pos.new_offset(offset_x,offset_y);
@@ -108,7 +109,7 @@ impl Board {
                     continue;
                 }
                 let target = self.get(*pos);
-                if target == Empty || (target == Black && is_black) || (target == White && !is_black) {
+                if target == Empty || (target == Black && self.is_black) || (target == White && !self.is_black) {
                     continue;
                 }
                 while is_in_board(*pos) {
@@ -117,10 +118,10 @@ impl Board {
                         break;
                     }
                     log(&*format!("search,{}", *pos));
-                    if (target == Black && is_black) || (target == White && !is_black) {
+                    if (target == Black && self.is_black) || (target == White && !self.is_black) {
                         let mut _pos = pos.new_offset(offset_x,offset_y);
                         while is_in_board(*_pos) {
-                            self.update(*_pos,is_black);
+                            self.update(*_pos);
                             _pos.apply_offset(offset_x,offset_y);
                             if _pos.x == pos.x {
                                 break;
@@ -137,11 +138,11 @@ impl Board {
     /**
     石を置くメゾット
     */
-    pub fn put(&mut self, pos: Pos, is_black: bool) -> Result<i8,String> {
-        if !self.is_placeable(*pos,is_black) {
+    pub fn put(&mut self, pos: Pos) -> Result<i8,String> {
+        if !self.is_placeable(*pos) {
             return Err("slot is not placeable".to_owned());
         }
-        self._put(*pos,is_black);
+        self._put(*pos);
         Ok(0)
     }
 }
@@ -156,19 +157,19 @@ fn is_in_board(pos: Pos) -> bool{
 /**
 空のボードデータを作成
 */
-pub fn create_board() -> Board {
+pub fn create_board(is_black: bool) -> Board {
     let mut data: [[State;10];10] = [[Empty;10];10];
     data[4][4] = White;
     data[5][5] = White;
     data[4][5] = Black;
     data[5][4] = Black;
-    return Board{ data };
+    return Board{ data, is_black };
 }
 
 /**
 受け取ったjsonからボードデータを読み込みstructを生成
 */
-pub fn load_board(val: String) -> Board {
+pub fn load_board(val: String, is_black: bool) -> Board {
     let board = serde_json::from_str(&val).unwrap();
-    return Board{data: board}
+    return Board{data: board, is_black}
 }
