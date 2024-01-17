@@ -1,8 +1,19 @@
 mod othello;
 
 use zoon::{named_color::*, *};
-use crate::othello::load_board;
-use zoon::console::log;
+/**
+othelloの使い方
+初期化
+    let mut board = load_board(相手のjson);
+または
+    let mut board = create_board();
+
+石の配置
+    board.put(x: i8, y: i8, 石が黒か).unwrap();
+
+盤面のダンプ
+    board.dump() -> String
+ */
 
 #[static_ref]
 fn counter() -> &'static Mutable<u32> {
@@ -10,8 +21,6 @@ fn counter() -> &'static Mutable<u32> {
 }
 
 fn increment() {
-    let val =load_board(String::from("[[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Black\",\"White\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"White\",\"Black\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"]]"));
-    log(&val.dump());
     counter().update(|counter| counter + 1);
 }
 
