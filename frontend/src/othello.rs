@@ -1,4 +1,3 @@
-use std::fmt::format;
 use serde::{Serialize, Deserialize};
 use serde_json;
 use zoon::console::log;
@@ -35,7 +34,7 @@ pub enum State {
 */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Board{
-    data: [[State;10];10],
+    data: [[State;8];8],
     is_black: bool
 }
 
@@ -150,8 +149,8 @@ impl Board {
 
     pub fn get_placeable_pos(&self) -> Vec<Pos> {
         let mut result: Vec<Pos> = Vec::new();
-        for y in 0..10 {
-            for x in 0..10 {
+        for y in 0..8 {
+            for x in 0..8 {
                 let pos = Pos{x,y};
                 if !self.is_placeable(pos) {
                     continue;
@@ -174,11 +173,11 @@ fn is_in_board(pos: Pos) -> bool{
 空のボードデータを作成
 */
 pub fn create_board(is_black: bool) -> Board {
-    let mut data: [[State;10];10] = [[Empty;10];10];
+    let mut data: [[State;8];8] = [[Empty;8];8];
+    data[3][3] = White;
     data[4][4] = White;
-    data[5][5] = White;
-    data[4][5] = Black;
-    data[5][4] = Black;
+    data[3][4] = Black;
+    data[4][3] = Black;
     return Board{ data, is_black };
 }
 
