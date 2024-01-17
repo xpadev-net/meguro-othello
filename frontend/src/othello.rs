@@ -1,33 +1,31 @@
 use serde::{Serialize, Deserialize};
+use serde_json;
 
-enum State {
+#[derive(Copy, Clone,Serialize,Deserialize, Debug)]
+pub enum State {
     Empty,
     Black,
-    White
+    White,
+    Placeable,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Board{
-    data: [[State;8];8]
+pub struct Board{
+    data: [[State;10];10]
 }
 
 impl Board {
     pub fn dump(&self) -> String {
-        return output_json(**self).unwrap();
+        return serde_json::to_string(&self.data).unwrap();
     }
-    pub fn load(&self, val: String) -> Board {
-        let board = serde_json::from_str(&val).unwrap();
-        return Board{data: board}
-    }
-}
-
-fn output_json(board: Board) -> std::io::Result<(String)> {
-    let serialized: String = serde_json::to_string(&board).unwrap();
-
-    Ok(serialized)
 }
 
 pub fn create_board() -> Board {
-    let data: [[State;8];8] = [[State::Empty;8];8];
-    return Board{data };
+    let data: [[State;10];10] = [[State::Empty;10];10];
+    return Board{ data };
+}
+
+pub fn load_board(val: String) -> Board {
+    let board = serde_json::from_str(&val).unwrap();
+    return Board{data: board}
 }

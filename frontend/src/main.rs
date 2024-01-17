@@ -1,6 +1,8 @@
 mod othello;
 
 use zoon::{named_color::*, *};
+use crate::othello::load_board;
+use zoon::console::log;
 
 #[static_ref]
 fn counter() -> &'static Mutable<u32> {
@@ -8,7 +10,9 @@ fn counter() -> &'static Mutable<u32> {
 }
 
 fn increment() {
-    counter().update(|counter| counter + 1)
+    let val =load_board(String::from("[[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Black\",\"White\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"White\",\"Black\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"]]"));
+    log(&val.dump());
+    counter().update(|counter| counter + 1);
 }
 
 fn root() -> impl Element {
