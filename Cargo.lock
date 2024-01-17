@@ -31,7 +31,11 @@ dependencies = [
  "futures-util",
  "log",
  "once_cell",
+<<<<<<< HEAD
  "smallvec 1.11.2",
+=======
+ "smallvec 1.12.0",
+>>>>>>> origin/master
 ]
 
 [[package]]
@@ -70,7 +74,11 @@ dependencies = [
  "actix-utils",
  "ahash",
  "base64",
+<<<<<<< HEAD
  "bitflags 2.4.1",
+=======
+ "bitflags 2.4.2",
+>>>>>>> origin/master
  "bytes",
  "bytestring",
  "derive_more",
@@ -88,7 +96,11 @@ dependencies = [
  "pin-project-lite",
  "rand 0.8.5",
  "sha1",
+<<<<<<< HEAD
  "smallvec 1.11.2",
+=======
+ "smallvec 1.12.0",
+>>>>>>> origin/master
  "tokio",
  "tokio-util",
  "tracing",
@@ -220,7 +232,11 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_urlencoded",
+<<<<<<< HEAD
  "smallvec 1.11.2",
+=======
+ "smallvec 1.12.0",
+>>>>>>> origin/master
  "socket2",
  "time",
  "url",
@@ -361,9 +377,15 @@ checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
 name = "bitflags"
+<<<<<<< HEAD
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "327762f6e5a765692301e5bb513e0d9fef63be86bbc14528052b1cd3e6f03e07"
+=======
+version = "2.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed570934406eb16438a4e976b1b4500774099c13b8cb96eec99f620f05090ddf"
+>>>>>>> origin/master
 
 [[package]]
 name = "block-buffer"
@@ -685,6 +707,11 @@ dependencies = [
 name = "frontend"
 version = "0.1.0"
 dependencies = [
+<<<<<<< HEAD
+=======
+ "serde",
+ "serde_json",
+>>>>>>> origin/master
  "zoon",
 ]
 
@@ -787,7 +814,11 @@ dependencies = [
 [[package]]
 name = "futures_signals_ext"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "futures-signals",
  "futures_util_ext",
@@ -797,7 +828,11 @@ dependencies = [
 [[package]]
 name = "futures_util_ext"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "futures-util",
  "pin-project",
@@ -894,7 +929,11 @@ checksum = "d77f7ec81a6d05a3abb01ab6eb7590f6083d08449fe5a1c8b1e620283546ccb7"
 [[package]]
 name = "hsluv"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "hsluv_macro",
  "rust-hsluv",
@@ -903,7 +942,11 @@ dependencies = [
 [[package]]
 name = "hsluv_macro"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "quote",
  "syn 1.0.109",
@@ -1022,7 +1065,11 @@ dependencies = [
 [[package]]
 name = "lang"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "serde",
 ]
@@ -1041,9 +1088,15 @@ checksum = "13e3bf6590cbc649f4d1a3eefc9d5d6eb746f5200ffb04e5e142700b8faa56e7"
 
 [[package]]
 name = "linux-raw-sys"
+<<<<<<< HEAD
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4cd1a83af159aa67994778be9070f0ae1bd732942279cabb14f86f986a21456"
+=======
+version = "0.4.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "01cda141df6706de531b6c46c3a33ecca755538219bd484262fa09410c13539c"
+>>>>>>> origin/master
 
 [[package]]
 name = "local-channel"
@@ -1145,7 +1198,11 @@ dependencies = [
 [[package]]
 name = "moon"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "actix-cors",
  "actix-files",
@@ -1187,7 +1244,11 @@ dependencies = [
 [[package]]
 name = "moon_entry_macros"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "quote",
 ]
@@ -1195,7 +1256,11 @@ dependencies = [
 [[package]]
 name = "moonlight"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "chrono",
  "futures_signals_ext",
@@ -1336,7 +1401,11 @@ dependencies = [
  "cfg-if",
  "libc",
  "redox_syscall",
+<<<<<<< HEAD
  "smallvec 1.11.2",
+=======
+ "smallvec 1.12.0",
+>>>>>>> origin/master
  "windows-targets 0.48.5",
 ]
 
@@ -1545,7 +1614,11 @@ dependencies = [
 [[package]]
 name = "route_macro"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1580,7 +1653,11 @@ version = "0.38.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "322394588aaf33c24007e8bb3238ee3e4c5c09c084ab32bc73890b99ff326bca"
 dependencies = [
+<<<<<<< HEAD
  "bitflags 2.4.1",
+=======
+ "bitflags 2.4.2",
+>>>>>>> origin/master
  "errno",
  "libc",
  "linux-raw-sys",
@@ -1777,9 +1854,15 @@ dependencies = [
 
 [[package]]
 name = "smallvec"
+<<<<<<< HEAD
 version = "1.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4dccd0940a2dcdf68d092b8cbab7dc0ad8fa938bf95787e1b916b0e3d0e8e970"
+=======
+version = "1.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2593d31f82ead8df961d8bd23a64c2ccf2eb5dd34b0a34bfb4dd54011c72009e"
+>>>>>>> origin/master
 
 [[package]]
 name = "socket2"
@@ -1806,7 +1889,11 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 [[package]]
 name = "static_ref_macro"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2385,7 +2472,11 @@ dependencies = [
 [[package]]
 name = "zoon"
 version = "0.1.0"
+<<<<<<< HEAD
 source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#eb6719095fcc2d3eda1eb6814a0f4968f05d9b40"
+=======
+source = "git+https://github.com/MoonZoon/MoonZoon?branch=main#bb44d71a7881758423f0067a6c9f8a8b69b93428"
+>>>>>>> origin/master
 dependencies = [
  "apply",
  "async-once-cell",
@@ -2403,6 +2494,10 @@ dependencies = [
  "lang",
  "moonlight",
  "num-traits",
+<<<<<<< HEAD
+=======
+ "once_cell",
+>>>>>>> origin/master
  "paste",
  "pin-project",
  "route_macro",

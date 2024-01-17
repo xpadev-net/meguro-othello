@@ -29,6 +29,22 @@ enum State {
 }
 
 
+mod othello;
+
+use zoon::{named_color::*, *};
+/**
+othelloの使い方
+初期化
+    let mut board = load_board(相手のjson,自分の石が黒か);
+または
+    let mut board = create_board(自分の石が黒か);
+
+石の配置
+    board.put(Pos{x,y}).unwrap();
+
+盤面のダンプ
+    board.dump() -> String
+ */
 
 #[static_ref]
 fn fields() -> &'static MutableVec<MutableVec<Field>> {
