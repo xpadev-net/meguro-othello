@@ -1,6 +1,6 @@
 use std::{ops::Div, collections::btree_set::Union, };
 
-use zoon::{format, named_color::*, *, dominator::animation::Percentage};
+use zoon::{format, named_color::*, *, dominator::{animation::Percentage, window_size}, web_sys::HtmlScriptElement};
 
 // @TODO finish
 
@@ -10,24 +10,17 @@ type Y = u32;
 #[derive(Debug, Clone)]
 struct Field {
     kind: FieldKind,
-    state: Mutable<FieldState>,
 }
 
 impl Field {
     fn new_empty(mines: u16) -> Self {
         Field {
-            kind: FieldKind::Empty { mines },
-            state: Mutable::new(FieldState::Default),
-        }
-    }
-
-    fn new_mine() -> Self {
-        Field {
-            kind: FieldKind::Mine,
-            state: Mutable::new(FieldState::Default),
+            kind: FieldKind::Empty { mines }
         }
     }
 }
+
+    
 
 #[derive(Debug, Clone, Copy)]
 enum FieldKind {
@@ -35,13 +28,7 @@ enum FieldKind {
     Empty { mines: u16 },
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum FieldState {
-    Default,
-    Flagged,
-    Uncovered,
-    
-}
+
 
 #[static_ref]
 fn fields() -> &'static MutableVec<MutableVec<Field>> {
@@ -51,14 +38,14 @@ fn fields() -> &'static MutableVec<MutableVec<Field>> {
 fn hardcoded_fields() -> Vec<MutableVec<Field>> {
     vec![
         MutableVec::new_with_values(vec![
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
-            Field::new_empty(0),
+            Field::new_empty(1),
+            Field::new_empty(1),
+            Field::new_empty(1),
+            Field::new_empty(1),
+            Field::new_empty(1),
+            Field::new_empty(1),
+            Field::new_empty(1),
+            Field::new_empty(1),
         ]),
         MutableVec::new_with_values(vec![
             Field::new_empty(0),
@@ -151,21 +138,14 @@ fn hardcoded_fields() -> Vec<MutableVec<Field>> {
 
 
 
-fn flag_field(field: &Field) {
-    let mut state = field.state.lock_mut();
-    match *state {
-        FieldState::Flagged => *state = FieldState::Default,
-        FieldState::Default => *state = FieldState::Flagged,
-        FieldState::Uncovered => (),
-    }
-}
+
 
 fn root() -> impl Element {
     Column::new()
         .s(Align::center())
         .s(Gap::both(20))
-        .s(Height::fill())
-        .s(Width::fill())
+        .s(Height::screen())
+        .s(Width::percent(100))
         .s(Background::new().color(hsluv!(360, 100, 100)))
         .item(grid())
         .item(reset_button())
@@ -187,63 +167,60 @@ fn reset_button() -> impl Element {
 
 fn grid() -> impl Element {
     let spacing = || Gap::both(0);
-    Column::new()
+    Column::new()  
         .s(Align::center())
-        // .s(Width::fill().max(Percentage::new(90)))
-
         .s(spacing())
-        .s(Borders::all(Border::new().color(hsluv!(0, 0, 0)).width(2)))
+        .s(Height::exact(800))
+        .s(Width::exact(800)) 
         .items_signal_vec(
             fields()
                 .signal_vec_cloned()
                 .enumerate()
                 .map(move |(y, fields)| {
-                    Row::new().s(spacing()).items_signal_vec(
-                        fields
-                            .signal_vec_cloned()
-                            .enumerate()
-                            .map(move |(x, field)| {
-                                field_button(
-                                    x.get().unwrap_throw() as X,
-                                    y.get().unwrap_throw() as Y,
-                                    field,
-                                )
-                            }),
-                    )
+                    Row::new()  
+                        .s(spacing())
+                        .items_signal_vec(
+                            fields
+                                .signal_vec_cloned()
+                                .enumerate()
+                                .map(move |(x, field)| {
+                                    field_button(
+                                        x.get().unwrap_throw() as X,
+                                        y.get().unwrap_throw() as Y,
+                                        field,
+                                    )
+                                }),
+                        )
                 }),
         )
 }
 
 fn field_button(x: X, y: Y, field: Field) -> impl Element {
     let (hovered, hovered_signal) = Mutable::new_and_signal(false);
-
     Button::new()
+        .s(Align::center())
         .s(Padding::all(10))
-        .s(Width::percent(20))
+        .s(Height::exact(100))
+        .s(Width::exact(100))
         .s(Background::new().color_signal(hovered_signal.map_bool(|| hsluv!(130, 100, 60), || hsluv!(130, 100, 53))))
         .s(Borders::all(Border::new().color(hsluv!(0, 0, 0)).width(2)))
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label(
             El::new().s(Height::fill()).child(
                 Column::new()
-                    .item(El::new().child(format!("[{x}, {y}]")))
+                    // .item(El::new().child(format!("[{x}, {y}]")))
                     // .item(
                     //     El::new()
                     //         .child_signal(field.state.signal_ref(|state| format!("{state:#?}"))),
                     // )
-                    .item(El::new().s(Width::fill().min(10)).s(Height::fill().min(50)).s(Background::new().color(hsluv!(0, 0, 0))).s(RoundedCorners::all(100))
-                )
+                    .item(stone(x, y, field))
                     
             ),
         )
         // @TODO refactor together with event handler API redesign
         .update_raw_el(|raw_el| {
             raw_el
-                .event_handler(move |event: events::MouseDown| match event.button() {
-                    events::MouseButton::Left => flag_field(&field),
-                    
-                    _ => (),
-                })
+                
                 .event_handler_with_options(
                     EventOptions::new().preventable(),
                     move |event: events::ContextMenu| {
@@ -253,6 +230,16 @@ fn field_button(x: X, y: Y, field: Field) -> impl Element {
         })
 }
 
+
+fn stone(x: X, y: Y, field: Field) -> impl Element {
+    El::new()
+        .s(Align::center())
+        .s(Width::exact(80))
+        .s(Height::exact(80))
+        .s(Background::new().color(hsluv!(0, 0, 0)))
+        .s(RoundedCorners::all(100))
+
+}
 
 
 fn main() {
