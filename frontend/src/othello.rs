@@ -1,3 +1,4 @@
+use std::fmt::format;
 use serde::{Serialize, Deserialize};
 use serde_json;
 use zoon::console::log;
@@ -83,7 +84,7 @@ impl Board {
                     if target == Empty {
                         break;
                     }
-                    if (target == Black && !self.is_black) || (target == White && self.is_black) {
+                    if (target == Black && self.is_black) || (target == White && !self.is_black) {
                         return true;
                     }
                     pos.apply_offset(offset_x,offset_y);
@@ -145,6 +146,20 @@ impl Board {
         }
         self._put(pos);
         Ok(0)
+    }
+
+    pub fn get_placeable_pos(&self) -> Vec<Pos> {
+        let mut result: Vec<Pos> = Vec::new();
+        for y in 0..10 {
+            for x in 0..10 {
+                let pos = Pos{x,y};
+                if !self.is_placeable(pos) {
+                    continue;
+                }
+                result.push(pos);
+            }
+        }
+        result
     }
 }
 
