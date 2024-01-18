@@ -330,6 +330,7 @@ name = "backend"
 version = "0.1.0"
 dependencies = [
  "moon",
+ "shared",
 ]
 
 [[package]]
@@ -1749,6 +1750,9 @@ dependencies = [
 [[package]]
 name = "shared"
 version = "0.1.0"
+dependencies = [
+ "moonlight",
+]
 
 [[package]]
 name = "signal-hook-registry"
