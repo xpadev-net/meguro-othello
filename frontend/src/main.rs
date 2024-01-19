@@ -1,5 +1,6 @@
 
 
+use othello::{create_board, load_board};
 use zoon::{format, named_color::*, *,  };
 
 // @TODO finish
@@ -51,92 +52,29 @@ fn fields() -> &'static MutableVec<MutableVec<Field>> {
     MutableVec::new_with_values(hardcoded_fields())
 }
 
+
+//create_boardをする前は、fieldはすべてEmpty
 fn hardcoded_fields() -> Vec<MutableVec<Field>> {
-    vec![
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-        ]),
-    ]
+    let row = MutableVec::new_with_values(vec![
+        Field::new_empty(State::Empty); 8 
+    ]);
+    vec![row; 8] 
 }
 
 
+fn judge_board() {
+    if is_fields_empty(fields().lock_ref().to_vec()) {
+        create_board(true);
+    }else {
+        // load_board(hardcoded_fields(), true);
+    }
+}
+
+fn is_fields_empty(fields: Vec<MutableVec<Field>>) -> bool {
+    fields.into_iter().all(|row| {
+        row.lock_ref().iter().all(|field| matches!(field.kind, State::Empty))
+    })
+}
 
 fn root() -> impl Element {
     Column::new()
@@ -222,7 +160,7 @@ fn field_button(x: X, y: Y, field: Field) -> impl Element {
 }
 
 
-fn stone(x: X, y: Y, field: Field) -> impl Element {
+fn stone(_x: X, _y: Y, field: Field) -> impl Element {
     El::new()
         .s(Align::center())
         .s(Width::exact(80))
