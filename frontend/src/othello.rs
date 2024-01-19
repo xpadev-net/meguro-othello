@@ -173,7 +173,6 @@ fn is_in_board(pos: Pos) -> bool{
 空のボードデータを作成
 */
 pub fn create_board(is_black: bool) -> Board {
-    println!("ボードを制作しました");
     let mut data: [[State;8];8] = [[Empty;8];8];
     data[3][3] = White;
     data[4][4] = White;
