@@ -21,6 +21,6 @@ pub enum DownMsg {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(crate = "serde")]
 pub struct Message {
-    pub username: String,
-    pub text: String,
+    pub key: String,
+    pub data: Vec<String>,
 }
