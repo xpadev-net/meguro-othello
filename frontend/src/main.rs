@@ -30,6 +30,7 @@ enum State {
 
 
 mod othello;
+mod connection;
 
 use zoon::{named_color::*, *};
 /**
