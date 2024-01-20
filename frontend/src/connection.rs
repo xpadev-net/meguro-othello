@@ -13,8 +13,8 @@ pub fn connection() -> &'static Connection<UpMsg, DownMsg> {
                 is_searching_room().set(false);
                 stopwatch().take();
                 let _target_id = &message.data[1];
-                send_join_room_approve(_target_id.clone());
                 target_id().set(Option::from(_target_id).cloned());
+                send_join_room_approve(_target_id.clone());
             }else{
                 send_join_room_reject(message.data[1].to_string());
             }
