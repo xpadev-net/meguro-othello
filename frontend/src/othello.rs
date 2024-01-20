@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 use serde_json;
 use zoon::console::log;
+use zoon::{Mutable, MutableExt};
 use crate::othello::State::{Black, Empty, White};
 
 #[derive(Clone, Copy, Debug)]
@@ -34,7 +35,7 @@ pub enum State {
 */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Board{
-    data: [[State;8];8],
+    data: [[Mutable<State>;8];8],
     is_black: bool
 }
 
@@ -50,14 +51,14 @@ impl Board {
     座標からマスの状態を更新する
     */
     fn update(&mut self, pos: Pos){
-        self.data[pos.y as usize][pos.x as usize] = if self.is_black { Black } else { White };
+        self.data[pos.y as usize][pos.x as usize].update(if self.is_black { Black } else { White });
     }
 
     /**
     座標からマスの状態を取得する
     */
     fn get(&self, pos: Pos) -> State{
-        self.data[pos.y as usize][pos.x as usize]
+        self.data[pos.y as usize][pos.x as usize].get()
     }
 
     /**
@@ -173,11 +174,11 @@ fn is_in_board(pos: Pos) -> bool{
 空のボードデータを作成
 */
 pub fn create_board(is_black: bool) -> Board {
-    let mut data: [[State;8];8] = [[Empty;8];8];
-    data[3][3] = White;
-    data[4][4] = White;
-    data[3][4] = Black;
-    data[4][3] = Black;
+    let mut data: [[Mutable<State>;8];8] = [[Mutable::new(Empty);8];8];
+    data[3][3].update(White);
+    data[4][4].update(White);
+    data[3][4].update(Black);
+    data[4][3].update(Black);
     return Board{ data, is_black };
 }
 
