@@ -17,15 +17,6 @@ struct Field {
     kind: State,
 }
 
-
-#[derive(Debug, Clone, Copy)]
-enum State {
-    Empty,
-    Black,
-    White,
-}
-
-
 impl Field {
     fn new_empty(state:State) -> Self {
         Field {
