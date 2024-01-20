@@ -51,7 +51,7 @@ impl Board {
     座標からマスの状態を更新する
     */
     fn update(&mut self, pos: Pos){
-        self.data[pos.y as usize][pos.x as usize].update(if self.is_black { Black } else { White });
+        self.data[pos.y as usize][pos.x as usize].update(|_|if self.is_black { Black } else { White });
     }
 
     /**
@@ -174,12 +174,7 @@ fn is_in_board(pos: Pos) -> bool{
 空のボードデータを作成
 */
 pub fn create_board(is_black: bool) -> Board {
-    let mut data: [[Mutable<State>;8];8] = [[Mutable::new(Empty);8];8];
-    data[3][3].update(White);
-    data[4][4].update(White);
-    data[3][4].update(Black);
-    data[4][3].update(Black);
-    return Board{ data, is_black };
+    load_board("[[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"White\",\"Black\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Black\",\"White\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"]]".parse().unwrap(), is_black)
 }
 
 /**
