@@ -53,11 +53,12 @@ pub fn search_room(){
 }
 
 pub fn send_board(board: Board) {
+    let board_json = board.dump();
     Task::start(async {
         let result = connection()
             .send_up_msg(UpMsg::SendMessage(Message {
                 key: "send_board".parse().unwrap(),
-                data: vec![target_id().get_cloned().unwrap(),self_id().get_cloned(),board.dump()],
+                data: vec![target_id().get_cloned().unwrap(),self_id().get_cloned(),board_json],
             }))
             .await;
         if let Err(error) = result {
