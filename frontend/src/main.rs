@@ -4,6 +4,8 @@ use othello::{create_board,  State};
 use zoon::console::log;
 use zoon::{format, named_color::*, *,  };
 mod  othello;
+mod connection;
+use zoon::{named_color::*, *};
 
 // @TODO finish
 
@@ -15,6 +17,15 @@ struct Field {
     kind: State,
 }
 
+
+#[derive(Debug, Clone, Copy)]
+enum State {
+    Empty,
+    Black,
+    White,
+}
+
+
 impl Field {
     fn new_empty(state:State) -> Self {
         Field {
@@ -22,6 +33,7 @@ impl Field {
         }
     }
 }
+
 
 
 /**
