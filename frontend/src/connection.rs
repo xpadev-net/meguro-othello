@@ -1,7 +1,7 @@
 use zoon::{eprintln, *};
 use shared::{DownMsg, UpMsg,Message};
 use uuid::Uuid;
-use crate::othello::Board;
+use crate::othello::{Board, create_board};
 
 #[static_ref]
 pub fn connection() -> &'static Connection<UpMsg, DownMsg> {
@@ -102,6 +102,7 @@ fn send_join_room_approve(target_id: String){
                 data: vec![target_id,self_id().get_cloned()],
             }))
             .await;
+        //todo: boardを作成し、send_board(board)を呼び出す
         if let Err(error) = result {
             eprintln!("Failed to send message: {:?}", error);
         }
