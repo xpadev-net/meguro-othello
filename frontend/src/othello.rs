@@ -161,6 +161,11 @@ impl Board {
         }
         result
     }
+
+    
+    pub fn get_data(&self) -> &[[Mutable<State>;8];8] {
+        &self.data
+    }
 }
 
 /**

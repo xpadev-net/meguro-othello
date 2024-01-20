@@ -1,7 +1,9 @@
+use std::io::Empty;
 
-
-use othello::{create_board, load_board};
+use othello::{create_board,  State};
+use zoon::console::log;
 use zoon::{format, named_color::*, *,  };
+mod  othello;
 
 // @TODO finish
 
@@ -22,17 +24,6 @@ impl Field {
 }
 
 
-#[derive(Debug, Clone, Copy)]
-enum State {
-    Empty,
-    Black,
-    White,
-}
-
-
-mod othello;
-
-use zoon::{named_color::*, *};
 /**
 othelloの使い方
 初期化
@@ -62,13 +53,17 @@ fn hardcoded_fields() -> Vec<MutableVec<Field>> {
 }
 
 
-fn judge_board() {
-    if is_fields_empty(fields().lock_ref().to_vec()) {
-        create_board(true);
-    }else {
-        // load_board(hardcoded_fields(), true);
-    }
+
+fn make(){
+    log("makeを実行します");
+    let result = create_board(true);
+    
+    log(&format!("{:?}", result.get_data()));
+
+    log("makeを実行しました");
+
 }
+
 
 fn is_fields_empty(fields: Vec<MutableVec<Field>>) -> bool {
     fields.into_iter().all(|row| {
@@ -97,7 +92,8 @@ fn reset_button() -> impl Element {
         .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("Reset")
-        .on_press(|| fields().lock_mut().replace_cloned(hardcoded_fields()))
+        .on_click(make)
+        
 }
 
 fn grid() -> impl Element {
