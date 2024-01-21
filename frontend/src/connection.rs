@@ -64,6 +64,9 @@ pub fn connection() -> &'static Connection<UpMsg, DownMsg> {
         if message.key == "send_board" && self_id().get_cloned() == message.data[0] && target_id().get_cloned().unwrap() == message.data[1]{
             board().lock_mut().load(message.data[2].to_string());
             is_my_turn().set(true);
+            if board().lock_mut().get_placeable_pos().len() < 1{
+                send_board();
+            }
             return;
         }
         if message.key == "ping" && self_id().get_cloned() == message.data[0] && target_id().get_cloned().unwrap() == message.data[1]{

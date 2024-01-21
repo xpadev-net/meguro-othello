@@ -122,10 +122,12 @@ fn field_button(x: X, y: Y, field: Mutable<State>) -> impl Element {
             ),
         )
         .on_click(move|| {
-            board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
+            let i =board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
+            if i.is_ok() {
+                send_board();
+            }
             log(&*board().lock_mut().dump());
             log(&format!("x: {}, y: {}", x, y));
-            send_board();
         })
         // @TODO refactor together with event handler API redesign
         .update_raw_el(|raw_el| {
