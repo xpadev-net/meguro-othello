@@ -13,21 +13,6 @@ use crate::othello::{Board, Pos};
 type X = u32;
 type Y = u32;
 
-#[derive(Debug, Clone)]
-struct Field {
-    kind: State,
-}
-
-impl Field {
-    fn new_empty(state:State) -> Self {
-        Field {
-            kind:state,
-        }
-    }
-}
-
-
-
 /**
 othelloの使い方
 初期化
@@ -42,43 +27,13 @@ othelloの使い方
     board.dump() -> String
  */
 
-#[static_ref]
-fn fields() -> &'static MutableVec<MutableVec<Field>> {
-    MutableVec::new_with_values(hardcoded_fields())
-}
+
 
 #[static_ref]
 fn board() -> &'static Mutable<Board> {
     Mutable::new(create_board(true))
 }
 
-
-//create_boardをする前は、fieldはすべてEmpty
-fn hardcoded_fields() -> Vec<MutableVec<Field>> {
-    let row = MutableVec::new_with_values(vec![
-        Field::new_empty(State::Empty); 8 
-    ]);
-    vec![row; 8] 
-}
-
-
-
-fn make(){
-    log("makeを実行します");
-    let result = create_board(true);
-    
-    log(&format!("{:?}", result.get_data()));
-
-    log("makeを実行しました");
-
-}
-
-
-fn is_fields_empty(fields: Vec<MutableVec<Field>>) -> bool {
-    fields.into_iter().all(|row| {
-        row.lock_ref().iter().all(|field| matches!(field.kind, State::Empty))
-    })
-}
 
 fn root() -> impl Element {
     Column::new()
@@ -102,7 +57,9 @@ fn reset_button() -> impl Element {
         .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("Reset")
-        .on_click(make)
+        .on_click(||{
+            //
+        })
 
 }
 
@@ -114,7 +71,7 @@ fn test_button() -> impl Element {
         .s(RoundedCorners::all(10))
         .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
-        .label("Reset")
+        .label("test")
         .on_click(|| {
             board().lock_mut().put(Pos { x: 2, y: 3 });
             log(&*board().lock_mut().dump());
@@ -133,16 +90,18 @@ fn grid() -> impl Element {
         .s(Width::exact(800)) 
         .items(
             board().lock_mut().get_data().clone()
-                .map(move |row| {
+            .iter()
+            .enumerate()
+                .map(move |(y, row)| {
                     Row::new()  
                         .s(spacing())
                         .items(
-                            row
-                                .map(move |col| {
+                            row.clone().iter().enumerate()
+                                .map(move |(x,col)| {
                                     field_button(
-                                        0,
-                                        0,
-                                        col,
+                                        x.try_into().unwrap(),
+                                        y.try_into().unwrap(),
+                                        col.clone(),
                                     )
                                 }),
                         )
@@ -167,6 +126,11 @@ fn field_button(x: X, y: Y, field: Mutable<State>) -> impl Element {
                     
             ),
         )
+        .on_click(move|| {
+            board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
+            log(&*board().lock_mut().dump());
+            log(&format!("x: {}, y: {}", x, y));
+        })
         // @TODO refactor together with event handler API redesign
         .update_raw_el(|raw_el| {
             raw_el
