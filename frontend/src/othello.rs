@@ -126,7 +126,7 @@ impl Board {
                             self.update(_pos);
                             log(&format!("update,{:?}, target: {:?}", _pos, pos));
                             _pos.apply_offset(offset_x,offset_y);
-                            if _pos.x == pos.x {
+                            if _pos.x == pos.x && _pos.y == pos.y {
                                 break;
                             }
                         }
