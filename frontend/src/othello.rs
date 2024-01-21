@@ -173,7 +173,7 @@ impl Board {
 座標がボード上にあるか
 */
 fn is_in_board(pos: Pos) -> bool{
-    0 <= pos.x && pos.x <= 9 && 0 <= pos.y && pos.y <= 9
+    0 <= pos.x && pos.x <= 7 && 0 <= pos.y && pos.y <= 7
 }
 
 /**
