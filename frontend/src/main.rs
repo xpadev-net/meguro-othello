@@ -7,7 +7,7 @@ mod  othello;
 mod connection;
 use zoon::{named_color::*, *};
 use crate::othello::{Board, Pos};
-use crate::connection::{board, connection, search_room, send_board};
+use crate::connection::{board, connection, is_my_turn, search_room, send_board};
 
 // @TODO finish
 
@@ -122,6 +122,9 @@ fn field_button(x: X, y: Y, field: Mutable<State>) -> impl Element {
             ),
         )
         .on_click(move|| {
+            if !is_my_turn().get() {
+                return;
+            }
             let i =board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
             if i.is_ok() {
                 send_board();

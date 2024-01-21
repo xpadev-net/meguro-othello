@@ -107,7 +107,7 @@ pub fn board() -> &'static Mutable<Board> {
 }
 
 #[static_ref]
-fn is_my_turn() -> &'static Mutable<bool> {
+pub fn is_my_turn() -> &'static Mutable<bool> {
     Mutable::new(false)
 }
 
