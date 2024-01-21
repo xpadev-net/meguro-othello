@@ -92,7 +92,7 @@ fn stopwatch() -> &'static Mutable<Option<Timer>> {
 }
 
 #[static_ref]
-fn is_searching_room() -> &'static Mutable<bool> {
+pub fn is_searching_room() -> &'static Mutable<bool> {
     Mutable::new(false)
 }
 

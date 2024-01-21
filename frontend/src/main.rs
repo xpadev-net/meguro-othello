@@ -7,7 +7,7 @@ mod  othello;
 mod connection;
 use zoon::{named_color::*, *};
 use crate::othello::{Board, Pos};
-use crate::connection::{board, connection, is_my_turn, search_room, send_board};
+use crate::connection::{board, connection, is_my_turn, is_searching_room, search_room, send_board};
 
 // @TODO finish
 
@@ -69,6 +69,9 @@ fn test_button() -> impl Element {
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("test")
         .on_click(|| {
+            if is_searching_room() {
+                return;
+            }
             search_room();
         })
 
