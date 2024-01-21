@@ -39,24 +39,7 @@ fn root() -> impl Element {
         .s(Width::percent(100))
         .s(Background::new().color(hsluv!(360, 100, 100)))
         .item(grid())
-        .item(reset_button())
         .item(test_button())
-}
-
-
-fn reset_button() -> impl Element {
-    let (hovered, hovered_signal) = Mutable::new_and_signal(false);
-    Button::new()
-        .s(Align::new().center_x())
-        .s(Padding::new().x(20).y(10))
-        .s(RoundedCorners::all(10))
-        .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
-        .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
-        .label("Reset")
-        .on_click(||{
-            //
-        })
-
 }
 
 fn test_button() -> impl Element {
