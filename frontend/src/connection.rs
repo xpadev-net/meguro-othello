@@ -1,4 +1,3 @@
-use std::fmt::format;
 use zoon::{eprintln, *};
 use shared::{DownMsg, UpMsg,Message};
 use uuid::Uuid;
@@ -48,18 +47,23 @@ pub fn connection() -> &'static Connection<UpMsg, DownMsg> {
         if message.key == "ack" && self_id().get_cloned() == message.data[0] && target_id().get_cloned().unwrap() == message.data[1]{
             send_game_start_request();
             is_master().set(true);
+            is_my_turn().set(true);
+            board().lock_mut().set_is_black(true);
             return;
         }
         if message.key == "game_start" && ((self_id().get_cloned() == message.data[0] && target_id().get_cloned().unwrap() == message.data[1]) || (self_id().get_cloned() == message.data[1] && target_id().get_cloned().unwrap() == message.data[0])){
             log("game_start");
             if is_master().get() {
                 stopwatch().set(Some(Timer::new(10_000, send_ping_req)));
+                board().lock_mut().reset();
+                board().lock_mut().set_is_black(false);
+                send_board()
             }
-            //todo: ゲームを開始する
             return;
         }
         if message.key == "send_board" && self_id().get_cloned() == message.data[0] && target_id().get_cloned().unwrap() == message.data[1]{
-            //todo: load_board(message.data[2]) でmain.rsのデータを更新する
+            board().lock_mut().load(message.data[2].to_string());
+            is_my_turn().set(true);
             return;
         }
         if message.key == "ping" && self_id().get_cloned() == message.data[0] && target_id().get_cloned().unwrap() == message.data[1]{
@@ -94,16 +98,28 @@ fn is_master() -> &'static Mutable<bool> {
     Mutable::new(false)
 }
 
+#[static_ref]
+pub fn board() -> &'static Mutable<Board> {
+    Mutable::new(create_board(true))
+}
+
+#[static_ref]
+fn is_my_turn() -> &'static Mutable<bool> {
+    Mutable::new(false)
+}
+
 pub fn search_room(){
     log("search_room");
     stopwatch().set(Some(Timer::new(1_000, send_create_room_req)));
     is_searching_room().set(true);
     is_master().set(false);
+    is_my_turn().set(false)
 }
 
-pub fn send_board(board: Board) {
+pub fn send_board() {
     log("send_board");
-    let board_json = board.dump();
+    is_my_turn().set(false);
+    let board_json = board().lock_mut().dump();
     Task::start(async {
         let result = connection()
             .send_up_msg(UpMsg::SendMessage(Message {

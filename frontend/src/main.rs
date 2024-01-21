@@ -7,6 +7,7 @@ mod  othello;
 mod connection;
 use zoon::{named_color::*, *};
 use crate::othello::{Board, Pos};
+use crate::connection::{board, connection, search_room, send_board};
 
 // @TODO finish
 
@@ -28,11 +29,6 @@ othelloの使い方
  */
 
 
-
-#[static_ref]
-fn board() -> &'static Mutable<Board> {
-    Mutable::new(create_board(true))
-}
 
 
 fn root() -> impl Element {
@@ -73,8 +69,7 @@ fn test_button() -> impl Element {
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("test")
         .on_click(|| {
-            board().lock_mut().put(Pos { x: 2, y: 3 });
-            log(&*board().lock_mut().dump());
+            search_room();
         })
 
 }
@@ -130,6 +125,7 @@ fn field_button(x: X, y: Y, field: Mutable<State>) -> impl Element {
             board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
             log(&*board().lock_mut().dump());
             log(&format!("x: {}, y: {}", x, y));
+            send_board();
         })
         // @TODO refactor together with event handler API redesign
         .update_raw_el(|raw_el| {

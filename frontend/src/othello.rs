@@ -163,7 +163,22 @@ impl Board {
         result
     }
 
-    
+    pub fn load(&self, val: String) {
+        let board:[[Mutable<State>;8];8] = serde_json::from_str(&val).unwrap();
+        for y in 0..8 {
+            for x in 0..8 {
+                self.data[y][x].set(board[y][x].get());
+            }
+        }
+    }
+
+    pub fn reset(&self) {
+        self.load("[[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"White\",\"Black\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Black\",\"White\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"],[\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\",\"Empty\"]]".parse().unwrap());
+    }
+    pub fn set_is_black(&mut self,is_black: bool){
+        self.is_black = is_black;
+    }
+
     pub fn get_data(&self) -> &[[Mutable<State>;8];8] {
         &self.data
     }
