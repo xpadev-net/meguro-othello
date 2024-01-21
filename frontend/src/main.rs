@@ -52,7 +52,7 @@ fn test_button() -> impl Element {
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("test")
         .on_click(|| {
-            if is_searching_room() {
+            if is_searching_room().get() {
                 return;
             }
             search_room();
