@@ -7,6 +7,7 @@ mod  othello;
 mod connection;
 use zoon::{named_color::*, *};
 use crate::othello::{Board, Pos};
+use crate::connection::{board, connection, is_my_turn, is_searching_room, search_room, send_board};
 
 // @TODO finish
 
@@ -29,11 +30,6 @@ othelloの使い方
 
 
 
-#[static_ref]
-fn board() -> &'static Mutable<Board> {
-    Mutable::new(create_board(true))
-}
-
 
 fn root() -> impl Element {
     Column::new()
@@ -43,24 +39,7 @@ fn root() -> impl Element {
         .s(Width::percent(100))
         .s(Background::new().color(hsluv!(360, 100, 100)))
         .item(grid())
-        .item(reset_button())
         .item(test_button())
-}
-
-
-fn reset_button() -> impl Element {
-    let (hovered, hovered_signal) = Mutable::new_and_signal(false);
-    Button::new()
-        .s(Align::new().center_x())
-        .s(Padding::new().x(20).y(10))
-        .s(RoundedCorners::all(10))
-        .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
-        .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
-        .label("Reset")
-        .on_click(||{
-            //
-        })
-
 }
 
 fn test_button() -> impl Element {
@@ -73,8 +52,10 @@ fn test_button() -> impl Element {
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("test")
         .on_click(|| {
-            board().lock_mut().put(Pos { x: 2, y: 3 });
-            log(&*board().lock_mut().dump());
+            if is_searching_room().get() {
+                return;
+            }
+            search_room();
         })
 
 }
@@ -127,7 +108,13 @@ fn field_button(x: X, y: Y, field: Mutable<State>) -> impl Element {
             ),
         )
         .on_click(move|| {
-            board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
+            if !is_my_turn().get() {
+                return;
+            }
+            let i =board().lock_mut().put(Pos { x: x.try_into().unwrap(),  y: y.try_into().unwrap() });
+            if i.is_ok() {
+                send_board();
+            }
             log(&*board().lock_mut().dump());
             log(&format!("x: {}, y: {}", x, y));
         })
