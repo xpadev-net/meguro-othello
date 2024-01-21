@@ -6,8 +6,8 @@ use crate::othello::State::{Black, Empty, White};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Pos {
-    x: i8,
-    y: i8
+    pub(crate) x: i8,
+    pub(crate) y: i8
 }
 
 impl Pos {
@@ -121,9 +121,10 @@ impl Board {
                     }
                     log(&format!("search,{:?}", pos));
                     if (target == Black && self.is_black) || (target == White && !self.is_black) {
-                        let mut _pos = pos.new_offset(offset_x,offset_y);
+                        let mut _pos = current_pos.new_offset(offset_x,offset_y);
                         while is_in_board(_pos) {
                             self.update(_pos);
+                            log(&format!("update,{:?}, target: {:?}", _pos, pos));
                             _pos.apply_offset(offset_x,offset_y);
                             if _pos.x == pos.x {
                                 break;
