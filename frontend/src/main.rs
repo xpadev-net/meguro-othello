@@ -1,6 +1,11 @@
+use std::io::Empty;
 
-
+use othello::{create_board,  State};
+use zoon::console::log;
 use zoon::{format, named_color::*, *,  };
+mod  othello;
+mod connection;
+use zoon::{named_color::*, *};
 
 // @TODO finish
 
@@ -21,18 +26,7 @@ impl Field {
 }
 
 
-#[derive(Debug, Clone, Copy)]
-enum State {
-    Empty,
-    Black,
-    White,
-}
 
-
-mod othello;
-mod connection;
-
-use zoon::{named_color::*, *};
 /**
 othelloの使い方
 初期化
@@ -52,92 +46,33 @@ fn fields() -> &'static MutableVec<MutableVec<Field>> {
     MutableVec::new_with_values(hardcoded_fields())
 }
 
+
+//create_boardをする前は、fieldはすべてEmpty
 fn hardcoded_fields() -> Vec<MutableVec<Field>> {
-    vec![
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-            Field::new_empty(State ::Black),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-            Field::new_empty(State ::Empty),
-        ]),
-        MutableVec::new_with_values(vec![
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-            Field::new_empty(State ::White),
-        ]),
-    ]
+    let row = MutableVec::new_with_values(vec![
+        Field::new_empty(State::Empty); 8 
+    ]);
+    vec![row; 8] 
 }
 
 
+
+fn make(){
+    log("makeを実行します");
+    let result = create_board(true);
+    
+    log(&format!("{:?}", result.get_data()));
+
+    log("makeを実行しました");
+
+}
+
+
+fn is_fields_empty(fields: Vec<MutableVec<Field>>) -> bool {
+    fields.into_iter().all(|row| {
+        row.lock_ref().iter().all(|field| matches!(field.kind, State::Empty))
+    })
+}
 
 fn root() -> impl Element {
     Column::new()
@@ -160,7 +95,8 @@ fn reset_button() -> impl Element {
         .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("Reset")
-        .on_press(|| fields().lock_mut().replace_cloned(hardcoded_fields()))
+        .on_click(make)
+        
 }
 
 fn grid() -> impl Element {
@@ -223,7 +159,7 @@ fn field_button(x: X, y: Y, field: Field) -> impl Element {
 }
 
 
-fn stone(x: X, y: Y, field: Field) -> impl Element {
+fn stone(_x: X, _y: Y, field: Field) -> impl Element {
     El::new()
         .s(Align::center())
         .s(Width::exact(80))
