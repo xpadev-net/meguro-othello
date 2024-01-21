@@ -50,7 +50,7 @@ fn test_button() -> impl Element {
         .s(RoundedCorners::all(10))
         .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
-        .label("test")
+        .label("find room")
         .on_click(|| {
             if is_searching_room().get() {
                 return;
