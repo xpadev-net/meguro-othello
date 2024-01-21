@@ -6,6 +6,7 @@ use zoon::{format, named_color::*, *,  };
 mod  othello;
 mod connection;
 use zoon::{named_color::*, *};
+use crate::othello::{Board, Pos};
 
 // @TODO finish
 
@@ -46,6 +47,11 @@ fn fields() -> &'static MutableVec<MutableVec<Field>> {
     MutableVec::new_with_values(hardcoded_fields())
 }
 
+#[static_ref]
+fn board() -> &'static Mutable<Board> {
+    Mutable::new(create_board(true))
+}
+
 
 //create_boardをする前は、fieldはすべてEmpty
 fn hardcoded_fields() -> Vec<MutableVec<Field>> {
@@ -83,6 +89,7 @@ fn root() -> impl Element {
         .s(Background::new().color(hsluv!(360, 100, 100)))
         .item(grid())
         .item(reset_button())
+        .item(test_button())
 }
 
 
@@ -96,8 +103,26 @@ fn reset_button() -> impl Element {
         .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
         .label("Reset")
         .on_click(make)
-        
+
 }
+
+fn test_button() -> impl Element {
+    let (hovered, hovered_signal) = Mutable::new_and_signal(false);
+    Button::new()
+        .s(Align::new().center_x())
+        .s(Padding::new().x(20).y(10))
+        .s(RoundedCorners::all(10))
+        .s(Background::new().color_signal(hovered_signal.map_bool(|| RED_5, || RED_6)))
+        .on_hovered_change(move |is_hovered| hovered.set_neq(is_hovered))
+        .label("Reset")
+        .on_click(|| {
+            board().lock_mut().put(Pos { x: 2, y: 3 });
+            log(&*board().lock_mut().dump());
+        })
+
+}
+
+
 
 fn grid() -> impl Element {
     let spacing = || Gap::both(0);
@@ -106,22 +131,18 @@ fn grid() -> impl Element {
         .s(spacing())
         .s(Height::exact(800))
         .s(Width::exact(800)) 
-        .items_signal_vec(
-            fields()
-                .signal_vec_cloned()
-                .enumerate()
-                .map(move |(y, fields)| {
+        .items(
+            board().lock_mut().get_data().clone()
+                .map(move |row| {
                     Row::new()  
                         .s(spacing())
-                        .items_signal_vec(
-                            fields
-                                .signal_vec_cloned()
-                                .enumerate()
-                                .map(move |(x, field)| {
+                        .items(
+                            row
+                                .map(move |col| {
                                     field_button(
-                                        x.get().unwrap_throw() as X,
-                                        y.get().unwrap_throw() as Y,
-                                        field,
+                                        0,
+                                        0,
+                                        col,
                                     )
                                 }),
                         )
@@ -129,7 +150,7 @@ fn grid() -> impl Element {
         )
 }
 
-fn field_button(x: X, y: Y, field: Field) -> impl Element {
+fn field_button(x: X, y: Y, field: Mutable<State>) -> impl Element {
     let (hovered, hovered_signal) = Mutable::new_and_signal(false);
     Button::new()
         .s(Align::center())
@@ -159,16 +180,18 @@ fn field_button(x: X, y: Y, field: Field) -> impl Element {
 }
 
 
-fn stone(_x: X, _y: Y, field: Field) -> impl Element {
+fn stone(_x: X, _y: Y, state: Mutable<State>) -> impl Element {
     El::new()
         .s(Align::center())
         .s(Width::exact(80))
         .s(Height::exact(80))
-        .s(Background::new().color(match field.kind {
-            State::Empty  => hsluv!(0, 0, 0, 0),
-            State::Black => hsluv!(0, 0, 0),
-            _ => hsluv!(0, 0, 100)
-        }))
+        .s(Background::new().color_signal(state.signal().map(|state|{
+            match state {
+                State::Empty  => hsluv!(0, 0, 0, 0),
+                State::Black => hsluv!(0, 0, 0),
+                _ => hsluv!(0, 0, 100)
+            }
+        })))
         .s(RoundedCorners::all(100))
         
 }
